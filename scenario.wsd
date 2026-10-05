@@ -1,5 +1,49 @@
 left to right direction
 
-package hiring {
+actor "Recruiter / HR Manager" as HR
+actor Candidate
+actor "Hiring Committee" as Committee
+actor "Email Service" as Email
 
+package hiring {
+    usecase "Create Job Description" as UC_CreateJob
+    usecase "Generate Shareable Job Link" as UC_GenerateLink
+
+    usecase "Apply for Job" as UC_Apply
+    usecase "Fill Out Application Form" as UC_Form
+    usecase "Upload Supporting Documents" as UC_Upload
+
+    usecase "Evaluate Candidates" as UC_Evaluate
+    usecase "Review Candidate Application" as UC_Review
+    usecase "Discard Unqualified Candidate" as UC_Discard
+    usecase "Send Rejection Email" as UC_Rejection
+
+    usecase "Interview Candidate" as UC_Interview
+    usecase "Make Hiring Decision" as UC_Decision
+
+    usecase "Generate Analytical Report" as UC_Report
 }
+
+HR --> UC_CreateJob
+HR --> UC_GenerateLink
+HR --> UC_Report
+
+UC_CreateJob ..> UC_GenerateLink : <<include>>
+
+Candidate --> UC_Apply
+UC_Apply ..> UC_Form : <<include>>
+UC_Apply ..> UC_Upload : <<include>>
+
+Committee --> UC_Evaluate
+UC_Evaluate ..> UC_Review : <<include>>
+
+Committee --> UC_Discard
+UC_Discard ..> UC_Evaluate : <<extend>>
+UC_Discard ..> UC_Rejection : <<include>>
+Email --> UC_Rejection
+
+Committee --> UC_Interview
+Committee --> UC_Decision
+UC_Decision ..> UC_Interview : <<include>>
+
+@enduml
